@@ -1,9 +1,0 @@
-@ApiDemo_HostAddress = http://localhost:5000
-
-POST {{ApiDemo_HostAddress}}/shirts/
-content-type: application/json
-
-{
-    "ShirtId": 1,
-    "Brand": "Levi's"
-}
