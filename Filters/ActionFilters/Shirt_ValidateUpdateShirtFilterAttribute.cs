@@ -13,7 +13,7 @@ public class Shirt_ValidateUpdateShirtFilterAttribute : ActionFilterAttribute
         base.OnActionExecuting(context);
 
         var id = context.ActionArguments["id"] as int?;
-        var shirt = context.ActionArguments["shirt"] as Shirt_HandleUpdateExceptionsFilterAttribute;
+        var shirt = context.ActionArguments["shirt"] as Shirt;
 
         if (id.HasValue && shirt is not null && id != shirt.ShirtId)
         {
