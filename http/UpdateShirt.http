@@ -1,0 +1,15 @@
+@ApiDemo_HostAddress = http://localhost:5000
+
+PUT {{ApiDemo_HostAddress}}/shirts/5
+Content-Type: : application/json
+
+{
+    "shirtId": 5,
+    "brand": "Adidas",
+    "color": "WhiteRed",
+    "size": 14,
+    "gender": "Men",
+    "price": 33
+    }
+
+

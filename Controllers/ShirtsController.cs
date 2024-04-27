@@ -1,3 +1,6 @@
+using System.Data.Common;
+
+using ApiDemo.Data;
 using ApiDemo.Filters;
 using ApiDemo.Models;
 using ApiDemo.Repository;
@@ -10,18 +13,33 @@ namespace ApiDemo.Controllers;
 [Route("shirts")]
 public class ShirtsController : ControllerBase
 {
+    private readonly ApplicationDbContext _db;
+
+    // this constructor means that => it will require an ApplicationDbContext
+    // then it will go through Services list => create an instance of ApplicationDbContext
+    // thus, we will have an instance of ApplicationDbContext in our controller
+    public ShirtsController(ApplicationDbContext db)
+    {
+        _db = db;
+    }
 
     [HttpGet]
     public IActionResult GetShirts()
     {
-        return Ok(ShirtRepository.GetShirts());
+        return Ok(_db.Shirts.ToList());
     }
 
     [HttpGet("{id}")]
-    [Shirt_ValidateShirtIdFilter]
+    // [Shirt_ValidateShirtIdFilter]
+    [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))] // this allows DI to work in filter
     public IActionResult GetShirtById(int id)
     {
-        return Ok(ShirtRepository.GetShritById(id));
+        // var shirt = _db.Shirts.Find(id);
+        var shirt = HttpContext.Items["shirt"];
+        // action filter calls db to validate FindById 
+        // if found -> store shirt obj in Http Context
+        // we use Http Context to obtain shirt to avoid Db call
+        return Ok(shirt);
 
         // move validation to Action Filter
         /*
@@ -63,7 +81,7 @@ public class ShirtsController : ControllerBase
     // public IActionResult CreateShirt([FromForm] Shirt shirt)
 
     [HttpPost]
-    [Shirt_ValidateCreateShirtFilter]
+    [TypeFilter(typeof(Shirt_ValidateCreateShirtFilterAttribute))]
     public IActionResult CreateShirt([FromBody] Shirt shirt)
     {
 
@@ -74,7 +92,8 @@ public class ShirtsController : ControllerBase
         if (existingShirt is not null) return BadRequest();
         */
         // else add shirt
-        ShirtRepository.AddShirt(shirt);
+        _db.Shirts.Add(shirt);
+        _db.SaveChanges();
 
         // return obj follows web api conventions
         // created status code + location header + json(obj created) 
@@ -84,9 +103,9 @@ public class ShirtsController : ControllerBase
 
 
     [HttpPut("{id}")]
-    [Shirt_ValidateShirtIdFilter] // validate id as well
+    // [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))]
     [Shirt_ValidateUpdateShirtFilter]
-    [Shirt_HandleUpdateExceptionsFilter]
+    // [TypeFilter(typeof(Shirt_HandleUpdateExceptionsFilterAttribute))]
     public IActionResult UpdateShirt(int id, Shirt shirt)
     {
         // validation done by filters
@@ -106,12 +125,25 @@ public class ShirtsController : ControllerBase
         // }
 
         ShirtRepository.UpdateShirt(shirt);
+        // validate shirt id => already found the shirt => stored in http context
+        // var shirtToUpdate = HttpContext.Items["shirt"] as Shirt;
+        // Console.WriteLine(shirtToUpdate);
+        // The moment Shirt obj is accessed via DB Context => EF Core already tracks it
+        // this is why we use FirstOrDefault() instead of Find()
+        // Find() method looks at items in EF Core change log as well
+        // shirtToUpdate.Brand = shirt.Brand;
+        // shirtToUpdate.Price = shirt.Price;
+        // shirtToUpdate.Size = shirt.Size;
+        // shirtToUpdate.Color = shirt.Color;
+        // shirtToUpdate.Gender = shirt.Gender;
+
+        // _db.SaveChanges();
 
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    [Shirt_ValidateShirtIdFilter]
+    [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))]
     public IActionResult DeleteShirt(int id)
     {
         var shirt = ShirtRepository.GetShritById(id);

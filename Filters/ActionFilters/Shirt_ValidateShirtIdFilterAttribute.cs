@@ -1,4 +1,6 @@
+using ApiDemo.Data;
 using ApiDemo.Repository;
+
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -7,6 +9,13 @@ namespace ApiDemo.Filters;
 
 public class Shirt_ValidateShirtIdFilterAttribute : ActionFilterAttribute
 {
+    private readonly ApplicationDbContext _db;
+
+    public Shirt_ValidateShirtIdFilterAttribute(ApplicationDbContext db)
+    {
+        _db = db;
+    }
+
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         base.OnActionExecuting(context);
@@ -26,14 +35,24 @@ public class Shirt_ValidateShirtIdFilterAttribute : ActionFilterAttribute
                 };
                 context.Result = new BadRequestObjectResult(problemDetails);
             }
-            else if (!ShirtRepository.ShirtExists(shirtId.Value))
+            else
             {
-                context.ModelState.AddModelError("ShirtId", "ShirtId doesn't exist");
-                var problemDetails = new ValidationProblemDetails(context.ModelState)
+                var shirt = _db.Shirts.Find(shirtId.Value);
+                if (shirt is null)
                 {
-                    Status = StatusCodes.Status404NotFound
-                };
-                context.Result = new NotFoundObjectResult(problemDetails);
+                    context.ModelState.AddModelError("ShirtId", "ShirtId doesn't exist");
+                    var problemDetails = new ValidationProblemDetails(context.ModelState)
+                    {
+                        Status = StatusCodes.Status404NotFound
+                    };
+                    context.Result = new NotFoundObjectResult(problemDetails);
+                }
+                else
+                {
+                    context.HttpContext.Items["shirt"] = shirt;
+                    // store shirt obj in Http Context -> to pass shirt back to method 
+                    // to avoid redundant DB calls
+                }
             }
         }
     }
