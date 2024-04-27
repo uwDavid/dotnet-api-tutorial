@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ApiDemo.Filters;
 
+// To prevent same item from created
 public class Shirt_ValidateCreateShirtFilterAttribute : ActionFilterAttribute
 {
     private readonly ApplicationDbContext _db;

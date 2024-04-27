@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ApiDemo.Filters;
 
+// ensure id provided in path == id provided in json body
 public class Shirt_ValidateUpdateShirtFilterAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)

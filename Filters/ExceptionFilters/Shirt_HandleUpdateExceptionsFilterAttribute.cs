@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace ApiDemo.Filters;
 
 // Exception filter for Update()
+// When shirt is deleted before update is commited to database.
 public class Shirt_HandleUpdateExceptionsFilterAttribute : ExceptionFilterAttribute
 {
     private readonly ApplicationDbContext _db;

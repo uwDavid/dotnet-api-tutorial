@@ -21,3 +21,9 @@ dotnet ef database updates
 
 Troubleshooting DB Update
 Try adding `TrustServerCertificate=True` in the connection string.
+
+## HTTP REST Client Bug
+
+HTTP REST Client for VS Code has a bug.
+When using it to make PUT request, .NET will respond with a 415 error.
+While the PUT endpoint works perfectly fine with Postman.

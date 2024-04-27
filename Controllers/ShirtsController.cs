@@ -103,10 +103,10 @@ public class ShirtsController : ControllerBase
 
 
     [HttpPut("{id}")]
-    // [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))]
+    [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))]
     [Shirt_ValidateUpdateShirtFilter]
-    // [TypeFilter(typeof(Shirt_HandleUpdateExceptionsFilterAttribute))]
-    public IActionResult UpdateShirt(int id, Shirt shirt)
+    [TypeFilter(typeof(Shirt_HandleUpdateExceptionsFilterAttribute))]
+    public IActionResult UpdateShirt(int id, [FromBody] Shirt shirt)
     {
         // validation done by filters
         // if (id != shirt.ShirtId) return BadRequest();
@@ -124,20 +124,21 @@ public class ShirtsController : ControllerBase
         //     throw; // else throw error
         // }
 
-        ShirtRepository.UpdateShirt(shirt);
+        // ShirtRepository.UpdateShirt(shirt);
+
         // validate shirt id => already found the shirt => stored in http context
-        // var shirtToUpdate = HttpContext.Items["shirt"] as Shirt;
+        var shirtToUpdate = HttpContext.Items["shirt"] as Shirt;
         // Console.WriteLine(shirtToUpdate);
         // The moment Shirt obj is accessed via DB Context => EF Core already tracks it
         // this is why we use FirstOrDefault() instead of Find()
         // Find() method looks at items in EF Core change log as well
-        // shirtToUpdate.Brand = shirt.Brand;
-        // shirtToUpdate.Price = shirt.Price;
-        // shirtToUpdate.Size = shirt.Size;
-        // shirtToUpdate.Color = shirt.Color;
-        // shirtToUpdate.Gender = shirt.Gender;
+        shirtToUpdate.Brand = shirt.Brand;
+        shirtToUpdate.Price = shirt.Price;
+        shirtToUpdate.Size = shirt.Size;
+        shirtToUpdate.Color = shirt.Color;
+        shirtToUpdate.Gender = shirt.Gender;
 
-        // _db.SaveChanges();
+        _db.SaveChanges();
 
         return NoContent();
     }
@@ -146,8 +147,14 @@ public class ShirtsController : ControllerBase
     [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))]
     public IActionResult DeleteShirt(int id)
     {
-        var shirt = ShirtRepository.GetShritById(id);
-        ShirtRepository.DeleteShirt(id);
-        return Ok(shirt);
+        // var shirt = ShirtRepository.GetShritById(id);
+        // ShirtRepository.DeleteShirt(id);
+
+        var shirtToDelete = HttpContext.Items["shirt"] as Shirt;
+
+        _db.Shirts.Remove(shirtToDelete);
+        // mark shirt as deleted in EF Core Change Tracker
+        _db.SaveChanges();
+        return Ok(shirtToDelete);
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ApiDemo.Filters;
 
+// Ensures that id is valid
 public class Shirt_ValidateShirtIdFilterAttribute : ActionFilterAttribute
 {
     private readonly ApplicationDbContext _db;
