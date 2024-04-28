@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDemo", "ApiDemo.csproj", "{54331E8A-68DB-49F3-8F37-0FFCE45429DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{B52C7026-6682-413A-9D09-B2BEEFD0492E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{09518EBF-C82F-40CC-A09B-8B2BE1539053}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +13,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{54331E8A-68DB-49F3-8F37-0FFCE45429DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54331E8A-68DB-49F3-8F37-0FFCE45429DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54331E8A-68DB-49F3-8F37-0FFCE45429DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54331E8A-68DB-49F3-8F37-0FFCE45429DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B52C7026-6682-413A-9D09-B2BEEFD0492E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B52C7026-6682-413A-9D09-B2BEEFD0492E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B52C7026-6682-413A-9D09-B2BEEFD0492E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B52C7026-6682-413A-9D09-B2BEEFD0492E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09518EBF-C82F-40CC-A09B-8B2BE1539053}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09518EBF-C82F-40CC-A09B-8B2BE1539053}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09518EBF-C82F-40CC-A09B-8B2BE1539053}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09518EBF-C82F-40CC-A09B-8B2BE1539053}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D4C3E8FE-4A61-4475-B4A9-B6E3B1BA8532}
+		SolutionGuid = {720D2409-3B84-4C19-9034-90644F526093}
 	EndGlobalSection
 EndGlobal
