@@ -1,3 +1,5 @@
+using System.Data.SqlTypes;
+
 using Microsoft.AspNetCore.Mvc;
 
 using WebApp.Data;
@@ -33,10 +35,17 @@ public class ShirtsController : Controller
     {
         if (ModelState.IsValid)
         {
-            var response = await _webApiExecutor.InvokePost("shirts", shirt);
-            if (response is not null)
+            try
             {
-                return RedirectToAction(nameof(Index));
+                var response = await _webApiExecutor.InvokePost("shirts", shirt);
+                if (response is not null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (WebApiException ex)
+            {
+                HandleWebApiException(ex);
             }
         }
         return View(shirt);
@@ -46,10 +55,17 @@ public class ShirtsController : Controller
     // endpoint - /shirts/UpdateShirt?shirtId=2
     public async Task<IActionResult> UpdateShirt(int shirtId)
     {
-        var shirt = await _webApiExecutor.InvokeGet<Shirt>($"shirts/{shirtId}");
-        if (shirt is not null)
+        try
         {
-            return View(shirt);
+            var shirt = await _webApiExecutor.InvokeGet<Shirt>($"shirts/{shirtId}");
+            if (shirt is not null)
+            {
+                return View(shirt);
+            }
+        }
+        catch (WebApiException ex)
+        {
+            HandleWebApiException(ex);
         }
 
         return NotFound();
@@ -60,10 +76,18 @@ public class ShirtsController : Controller
     {
         if (ModelState.IsValid)
         {
-            // invoke the API PUT method
-            await _webApiExecutor.InvokePut($"shirts/{shirt.ShirtId}", shirt);
-            // note: shirtId comes from hidden form field
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                // invoke the API PUT method
+                await _webApiExecutor.InvokePut($"shirts/{shirt.ShirtId}", shirt);
+                // note: shirtId comes from hidden form field
+                return RedirectToAction(nameof(Index));
+            }
+            catch (WebApiException ex)
+            {
+                HandleWebApiException(ex);
+                return View();
+            }
         }
         return View(shirt);
         // if model is not valid => return to same page
@@ -71,7 +95,32 @@ public class ShirtsController : Controller
 
     public async Task<IActionResult> DeleteShirt(int shirtId)
     {
-        await _webApiExecutor.InvokeDelete($"shirts/{shirtId}");
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _webApiExecutor.InvokeDelete($"shirts/{shirtId}");
+            return RedirectToAction(nameof(Index));
+        }
+        catch (WebApiException ex)
+        {
+            HandleWebApiException(ex);  // add erro to Model State
+            // then display page
+            return View(
+                nameof(Index),
+                await _webApiExecutor.InvokeGet<List<Shirt>>("shirts")
+            );
+        }
+    }
+
+    private void HandleWebApiException(WebApiException ex)
+    {
+        if (ex.ErrorReponse is not null &&
+                    ex.ErrorReponse.Errors is not null &&
+                    ex.ErrorReponse.Errors.Count > 0)
+        {
+            foreach (var error in ex.ErrorReponse.Errors)
+            {
+                ModelState.AddModelError(error.Key, string.Join("; ", error.Value));
+            }
+        }
     }
 }

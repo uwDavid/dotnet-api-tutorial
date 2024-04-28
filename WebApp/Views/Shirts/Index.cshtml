@@ -2,7 +2,12 @@
 
 <h3>Shirts</h3>
 <br />
-<table class="table table-striped">
+<div class="text-danger" asp-validation-summary="All"></div>
+<br />
+
+@if (Model is not null)
+{
+    <table class="table table-striped">
     <thead>
         <tr>
             <td>Brand</td>
@@ -16,20 +21,21 @@
     </thead>
     <tbody>
         @foreach (var shirt in Model)
-        {
-            <tr>
-                <td>@shirt.Brand</td>
-                <td>@shirt.Gender</td>
-                <td>@shirt.Color</td>
-                <td>@shirt.Size</td>
-                <td>@(shirt.Price.HasValue ? shirt.Price.Value.ToString("c") : "")</td>
-                <td><a class="btn btn-link" asp-controller="shirts" asp-action="updateshirt"
-                        asp-route-shirtId="@shirt.ShirtId">Edit</a></td>
-                <td><a class="btn btn-link" asp-controller="shirts" asp-action="deleteshirt"
-                        asp-route-shirtId="@shirt.ShirtId">Delete</a></td>
-            </tr>
-        }
-    </tbody>
-</table>
+            {
+                <tr>
+                    <td>@shirt.Brand</td>
+                    <td>@shirt.Gender</td>
+                    <td>@shirt.Color</td>
+                    <td>@shirt.Size</td>
+                    <td>@(shirt.Price.HasValue ? shirt.Price.Value.ToString("c") : "")</td>
+                    <td><a class="btn btn-link" asp-controller="shirts" asp-action="updateshirt"
+                            asp-route-shirtId="@shirt.ShirtId">Edit</a></td>
+                    <td><a class="btn btn-link" asp-controller="shirts" asp-action="deleteshirt"
+                            asp-route-shirtId="@shirt.ShirtId">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 <br />
 <a class="btn btn-primary" asp-controller="shirts" asp-action="createshirt">Create Shirt</a>
