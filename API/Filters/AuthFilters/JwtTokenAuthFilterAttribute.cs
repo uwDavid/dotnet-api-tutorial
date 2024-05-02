@@ -24,7 +24,7 @@ public class JwtTokenAuthFilterAttribute : Attribute, IAsyncAuthorizationFilter
 
         if (claims is null)
         {
-            context.Result = new UnauthorizedResult(); // 401 - short cirtui
+            context.Result = new UnauthorizedResult(); // 401 - short cirtuit
         }
         else // have claims => perform authorization checks on claims
         {
@@ -35,8 +35,9 @@ public class JwtTokenAuthFilterAttribute : Attribute, IAsyncAuthorizationFilter
 
             // 403 - checks if all claims are satisfied
             if (requiredClaims != null &&
-                requiredClaims.All(rc => claims.Any(c => c.Type.ToLower() == rc.ClaimType.ToLower() &&
-            c.Value.ToLower() == rc.ClaimValue.ToLower())))
+                !requiredClaims.All(rc => claims.Any(
+                    c => c.Type.ToLower() == rc.ClaimType.ToLower() &&
+                        c.Value.ToLower() == rc.ClaimValue.ToLower())))
             {
                 // if claims not satisfied - 403
                 context.Result = new StatusCodeResult(403);

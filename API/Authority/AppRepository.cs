@@ -11,7 +11,7 @@ public static class AppRepository
             ApplicationName = "MVCWeb",
             ClientId = "53DC1E6-4587-4AD5-8C6E-A8E48D59940E",
             Secret = "0673FC70-0514-4011-B4A3-DF9BC03201BC",
-            Scopes = "read,write"
+            Scopes = "read,write,delete" // "read,write"
         }
     };
 
