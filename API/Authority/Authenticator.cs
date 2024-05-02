@@ -23,10 +23,19 @@ public static class Authenticator
         var claims = new List<Claim>
         {
             new Claim("AppName", app?.ApplicationName??string.Empty),
-            new Claim("Read", (app?.Scopes??string.Empty).Contains("read")?"true":"false"),
-            new Claim("Write", (app?.Scopes??string.Empty).Contains("write")?"true":"false"),
+            // new Claim("Read", (app?.Scopes??string.Empty).Contains("read")?"true":"false"),
+            // new Claim("Write", (app?.Scopes??string.Empty).Contains("write")?"true":"false"),
         };
 
+        // read scope from AppCredential
+        var scopes = app?.Scopes?.Split(",");
+        if (scopes is not null && scopes.Length > 0)
+        {
+            foreach (var scope in scopes)
+            {
+                claims.Add(new Claim(scope.ToLower(), "true"));
+            }
+        }
 
         var secretKey = Encoding.ASCII.GetBytes(strSecretKey);
         var jwt = new JwtSecurityToken(
@@ -41,9 +50,9 @@ public static class Authenticator
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 
-    public static bool VerifyToken(string token, string key)
+    public static IEnumerable<Claim>? VerifyToken(string token, string key)
     {
-        if (string.IsNullOrWhiteSpace(token)) return false;
+        if (string.IsNullOrWhiteSpace(token)) return null;
 
         // to work with bearer token
         if (token.StartsWith("Bearer"))
@@ -68,16 +77,27 @@ public static class Authenticator
                     ValidateIssuer = false,
                     ClockSkew = TimeSpan.Zero
                 }, out securityToken);
+
+            if (securityToken is not null)
+            {
+                var tokenObject = tokenHandler.ReadJwtToken(token);
+                return tokenObject.Claims ?? (new List<Claim>());
+                // verification success, but no claims
+            }
+            else
+            {
+                return null; // failed auth
+            }
         }
         catch (SecurityTokenException)
         {
-            return false;
+            return null;
         }
         catch
         {
             throw;
         }
         // if security token is not null => return true
-        return securityToken != null;
+        // return securityToken != null; - no longer required, return null above
     }
 }
