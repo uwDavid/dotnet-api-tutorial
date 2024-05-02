@@ -2,7 +2,7 @@ app:
 	dotnet run --project WebApp
 
 api:
-	dotnet run --project Api
+	dotnet run --project API
 
 sapp:
 	dotnet run --project WebApp --launch-profile https

@@ -2,6 +2,7 @@ using System.Data.Common;
 
 using ApiDemo.Data;
 using ApiDemo.Filters;
+using ApiDemo.Filters.AuthFilters;
 using ApiDemo.Models;
 using ApiDemo.Repository;
 
@@ -11,6 +12,7 @@ namespace ApiDemo.Controllers;
 
 [ApiController]
 [Route("shirts")]
+[JwtTokenAuthFilter]
 public class ShirtsController : ControllerBase
 {
     private readonly ApplicationDbContext _db;
