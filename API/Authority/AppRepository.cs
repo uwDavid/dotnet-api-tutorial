@@ -24,5 +24,4 @@ public static class AppRepository
     {
         return _applications.FirstOrDefault(x => x.ClientId == clientId);
     }
-
 }

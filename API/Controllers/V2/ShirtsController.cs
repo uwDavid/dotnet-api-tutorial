@@ -4,15 +4,16 @@ using ApiDemo.Attributes;
 
 using ApiDemo.Data;
 using ApiDemo.Filters;
+using ApiDemo.Filters.ActionFilters.V2;
 using ApiDemo.Filters.AuthFilters;
 using ApiDemo.Models;
 using ApiDemo.Repository;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiDemo.Controllers;
+namespace ApiDemo.Controllers.V2;
 
-[ApiVersion("1.0")]
+[ApiVersion("2.0")]
 [ApiController]
 [Route("shirts")]
 [JwtTokenAuthFilter]
@@ -90,6 +91,7 @@ public class ShirtsController : ControllerBase
     [HttpPost]
     [RequiredClaim("write", "true")]
     [TypeFilter(typeof(Shirt_ValidateCreateShirtFilterAttribute))]
+    [Shirt_EnsureDescriptionIsPresentFilter]
     public IActionResult CreateShirt([FromBody] Shirt shirt)
     {
 
@@ -114,6 +116,7 @@ public class ShirtsController : ControllerBase
     [TypeFilter(typeof(Shirt_ValidateShirtIdFilterAttribute))]
     [Shirt_ValidateUpdateShirtFilter]
     [TypeFilter(typeof(Shirt_HandleUpdateExceptionsFilterAttribute))]
+    [Shirt_EnsureDescriptionIsPresentFilter]
     [RequiredClaim("write", "true")]
     public IActionResult UpdateShirt(int id, [FromBody] Shirt shirt)
     {

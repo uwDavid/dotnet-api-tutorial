@@ -3,6 +3,7 @@ using ApiDemo.Filters.OperationFilter;
 using Microsoft.OpenApi.Models;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddControllers();
+
+// API Versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    // use default version, if client didn't specify version number
+    options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    // Read version from header
+    options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
+    // report available versions
+    options.ReportApiVersions = true; // response header will show list of versions
+});
+
 // Swagger middleware
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
