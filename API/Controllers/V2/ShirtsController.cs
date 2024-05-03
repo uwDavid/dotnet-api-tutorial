@@ -15,7 +15,7 @@ namespace ApiDemo.Controllers.V2;
 
 [ApiVersion("2.0")]
 [ApiController]
-[Route("shirts")]
+[Route("v{v:apiVersion}/shirts")]
 [JwtTokenAuthFilter]
 public class ShirtsController : ControllerBase
 {

@@ -23,7 +23,7 @@ builder.Services.AddApiVersioning(options =>
     // use default version, if client didn't specify version number
     options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
     // Read version from header
-    options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
+    // options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
     // report available versions
     options.ReportApiVersions = true; // response header will show list of versions
 });
