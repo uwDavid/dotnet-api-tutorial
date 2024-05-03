@@ -29,7 +29,11 @@ builder.Services.AddApiVersioning(options =>
 });
 
 // Swagger middleware
-builder.Services.AddEndpointsApiExplorer();
+// builder.Services.AddEndpointsApiExplorer(); replace this with AddVersionedApiExplorer
+builder.Services.AddVersionedApiExplorer(
+    options => options.GroupNameFormat = "'v'VVV");
+// Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer
+// check dotnet/aspnet-api-versioning repo + wiki
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<AuthorizationHeaderOperationFilter>(); // custom defined filter
@@ -48,7 +52,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(
+        options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"); // update AddVersionedApiExplorer()
+        }
+    );
 }
 
 // app.UseHttpsRedirection();
