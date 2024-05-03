@@ -149,6 +149,7 @@ public class ShirtsController : ControllerBase
         shirtToUpdate.Size = shirt.Size;
         shirtToUpdate.Color = shirt.Color;
         shirtToUpdate.Gender = shirt.Gender;
+        shirtToUpdate.Description = shirt.Description;
 
         _db.SaveChanges();
 

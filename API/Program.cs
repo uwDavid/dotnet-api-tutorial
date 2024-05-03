@@ -36,7 +36,12 @@ builder.Services.AddVersionedApiExplorer(
 // check dotnet/aspnet-api-versioning repo + wiki
 builder.Services.AddSwaggerGen(c =>
 {
+    // add multiple version
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web API v1", Version = "version 1" });
+    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Web API v2", Version = "version 2" });
+
     c.OperationFilter<AuthorizationHeaderOperationFilter>(); // custom defined filter
+
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Scheme = "Bearer",
@@ -56,6 +61,7 @@ if (app.Environment.IsDevelopment())
         options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"); // update AddVersionedApiExplorer()
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "WebApi v2");
         }
     );
 }
